@@ -1,11 +1,12 @@
-function add(a, b) {
-  console.log(arguments);
-  return a + b;
-}
-add(5, 4, 6, 7, 8);
+console.log("글로벌 this : ", this);
 
-const addA = (a, b, ...aaa) => {
-  console.log(aaa);
-  return a + b;
+const go = () => {
+  console.log("화살표 this : ", this);
 };
-addA(100, 70, 5, 5, 5, 5, 5);
+
+function hi() {
+  console.log("일반함수 this : ", this);
+}
+
+go();
+hi();
