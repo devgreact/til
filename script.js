@@ -1,15 +1,12 @@
-class Student {
-  constructor(_age, _member) {
-    this.age = _age;
-    this.member = _member;
-  }
-  // 메소드 추가
-  say() {}
-  cry() {}
-  hi() {}
-}
-// 아래처럼 하면 안되요. 용도를 잘못 생각하고 코딩한것
-// Student(10, true);
+const person = {
+  age: 10,
+  nickName: "홍길동",
+  level: 5,
+};
 
-// 함수만 보아도 new 를 사용하려는 용도임을 앎.
-new Student(15, true);
+// const a = person.age;
+// const b = person.nickName;
+
+// 객체의 구조를 분해해서 할당한다.
+// 객체 구조 분해 할당
+const { age, nickName, level } = person;
