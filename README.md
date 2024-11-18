@@ -136,3 +136,38 @@ git push origin main
 
 만약 자격 증명 관리에 없으면 자동으로 인증 되는 안내창 출력
 ```
+
+#### 3.4. Clone
+
+1.  본인 , 타인의 github repository 복제 (clone) 하기
+
+  git clone https://github.com/devgreact/clone_kko.git   .
+
+  git branch  엔터
+
+2. 모든 브랜치 목록 확인하기 
+
+    git branch -a
+
+3. 특정 브랜치 클론하기
+
+  git checkout 브랜치명
+  git checkout 04-js
+
+  git branch  엔터
+
+
+4. 모든 브랜치 pull 하기 
+
+    for branch in $(git branch -r | grep -v '\->'); do
+        git branch --track "${branch#origin/}" "$branch"
+    done
+    git fetch --all
+    git pull --all  
+
+5. 최종 목록 확인하기
+
+    git branch
+
+현재 git 상태보기
+git status 엔터
