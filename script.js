@@ -1,12 +1,18 @@
-const person = {
-  age: 10,
-  nickName: "홍길동",
-  level: 5,
-};
+async function getAllData() {
+  try {
+    let res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    let data = await res.json();
+    console.log("포스트 : ", data);
 
-// const a = person.age;
-// const b = person.nickName;
+    res = await fetch("https://jsonplaceholder.typicode.com/albums");
+    data = await res.json();
+    console.log("앨범 : ", data);
 
-// 객체의 구조를 분해해서 할당한다.
-// 객체 구조 분해 할당
-const { age, nickName, level } = person;
+    res = await fetch("https://jsonplaceholder.typicode.com/users");
+    data = await res.json();
+    console.log("유저 : ", data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+getAllData();
