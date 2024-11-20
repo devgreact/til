@@ -1,466 +1,308 @@
-# 비동기(Asynchronous)
+# 리액트 CRA 프로젝트
 
-- `비동기`란 오랜 시간이 걸리는 작업
-- 예) 서버에 데이터를 요청, 또는 파일을 읽을 때, 쓸때 등
-- `비동기`처리는 시간이 많이 걸리는 작업중 `다른일도 같이 처리`하도록 진행하는 것
+- 기존 리액트 프로젝트 생성의 기준
+- ESLint 설정과 Prettier 통합이 목표
 
-## 1. 종류
+## 1. VSCode Extention 설치
 
-- XHR (Xml Http Request)
-- Callback
-- Promise
-- async/await
-- 백엔드 API 샘플 사이트(https://jsonplaceholder.typicode.com/)
+- ESLint
+  : JavaScript 를 위해서 코드 오류 및 코드 가이드를 Help 도구
 
-### 1.1. XHR
+- ES7+ React/Redux/React-Native snippets
+  : React 템플릿 도구
 
-- 서버와 통신하는 작업을 위해서 기본적 제공.
-- `Request` : 서버에 자료를 요청하는 것
-- `Response` : 요청된 자료로 반환된 결과
-- 지금은 자주 사용하지 않습니다.
-- xhr.status 는 200 대의 내용이 정상이다.
-- xhr.status 는 500 대의 내용은 서버가 없다.
-- xhr.status 는 400 대의 내용은 FE 가 오타낸 경우가 많다.
+- Error Lens
+  : JS 코드 에러 체크
 
-````js
-/**
- * getPost 함수는 백엔드 서버에 등록된 글 가져오기
- *
- * 사용법
- * ```javascript
- *  getPosts()
- * ```
- */
-// 함수 정의
-function getPosts() {
-  // 1. xhr 한개 만듦
-  const xhr = new XMLHttpRequest();
+- Prettier - Code formatter
+  : 문서 포맷터
 
-  // 2. 백엔드에서 알려준 주소로 요청을 실행할 함수
-  //   xhr.open("방식", "백엔드주소")
-  xhr.open("GET", "https://jsonplaceholder.typicode555.com/posts");
+## 2. 리액트 프로젝트 기본형 설치
 
-  // 3. 웹브라우저로 요청을 보낸다.
-  xhr.send();
+- 프로젝트 명은 반드시 `소문자`로 생성합니다.
+- 이름에 특수기호는 `-` 만 허용합니다.
+- 만약 현재 폴더에 프로젝트를 생성하려면 `.` 을 작성합니다.
+- 기본적으로 `git init` 이 자동 셋팅됩니다.
 
-  // 4. 요청이 결과를 처리하는 함수
-  xhr.onload = function () {
-    console.log("요청이 된 경우 결과 : ", xhr);
-    // 200 단위는 정상적인 처리이다. 자료가 왔다.
-    if (xhr.status === 200) {
-      // 처리가 완료되었다.
-      console.log(xhr.responseText);
-    } else if (xhr.status === 404) {
-      console.log("없는 페이지 입니다.");
-    } else if (xhr.status === 505) {
-      console.log("서버가 꺼져있습니다.");
-    }
-  };
-}
-// 함수 호출
-getPosts();
-````
-
-### 1.2. Callback 함수로 처리하기
-
-- 비동기 작업이 종료시 처리할 함수를 전달하여 처리
-
-```js
-// 서버에서 데이터 가져오기
-function getPosts() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 포트스들을 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getAlbums() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/albums");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 앨범데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getTodos() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/todos");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 할일데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-// 위의 코드는 상당히 코드량이 많다.
-// 언제가 오타가 발생할 것이다.
-// 예를 들어 http 주소가 바뀌었다.
-// 그래서 팀장님이 콜백함수로 하면 좋은데...
-function getData(apiString = "", callBack = function () {}) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/" + apiString);
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      callBack(xhr.responseText);
-    } else {
-      console.log(apiString + "에러에요", xhr.status);
-    }
-  };
-}
-function todosParse(data) {
-  console.log("할일 데이터 처리 했습니다.", data);
-}
-function albumsParse(data) {
-  console.log("앨범 데이터 처리 했습니다.", data);
-}
-function postsParse(data) {
-  console.log("포스트 데이터 처리 했습니다.", data);
-}
-function memberParse(data) {
-  console.log("멤버 데이터 처리 했습니다.", data);
-}
-
-getData("todos", todosParse);
-getData("albums", albumsParse);
-getData("posts", postsParse);
-getData("users", memberParse);
+```
+npx create-react-app@latest 프로젝트명
 ```
 
-#### 1.2.1. 콜백헬 경험
+- 프로젝트 생성하기
 
-- 함수의 요청을 여러분의 머릿속에 관리하셔야 합니다. (단점)
-
-```js
-// 서버에서 데이터 가져오기
-function getPosts() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 포트스들을 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getAlbums() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/albums");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 앨범데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getTodos() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/todos");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 할일데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-// 위의 코드는 상당히 코드량이 많다.
-// 언제가 오타가 발생할 것이다.
-// 예를 들어 http 주소가 바뀌었다.
-// 그래서 팀장님이 콜백함수로 하면 좋은데...
-function getData(apiString = "", callBack = function () {}) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/" + apiString);
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      callBack(xhr.responseText);
-    } else {
-      console.log(apiString + "에러에요", xhr.status);
-    }
-  };
-}
-function todosParse(data) {
-  console.log("할일 데이터 처리 했습니다.", data);
-  getData("albums", albumsParse);
-}
-function albumsParse(data) {
-  console.log("앨범 데이터 처리 했습니다.", data);
-  getData("posts", postsParse);
-}
-function postsParse(data) {
-  console.log("포스트 데이터 처리 했습니다.", data);
-  getData("users", memberParse);
-}
-function memberParse(data) {
-  console.log("멤버 데이터 처리 했습니다.", data);
-}
-
-getData("todos", todosParse);
-// getData("albums", albumsParse);
-// getData("posts", postsParse);
-// getData("users", memberParse);
+```
+npx create-react-app@latest .
 ```
 
-### 1.3. Promise (약속)
+## 3. 생성된 프로젝트 살펴보기
 
-- 서버 연동이 끝날 때 원하는 콜백함수를 실행한다.
-- 비동기 작업이 완료되면 결과를 알려주는 방식이다.
+- 회사에서 진행중인 프로젝트가 있다면 package.json 부터 파악
 
-#### 1.3.1. Promise 는 2개의 콜백함수를 파라멘터로 전달받음
+### 3.1. package.json 살펴보기
 
-- resolve 콜백함수: 정상적인 결과가 있을 때,
-- reject 콜백함수 : 비정상적, 즉, 에러가 있을 경우
+- 개발자가 `npm install 모듈명`
+- 개발시에 활용한 기술 파악
 
-#### 1.3.2. Promise 는 3개의 상태가 있습니다.
-
-- Pending : 결과 대기중...
-- Resolved : 성공됨!
-- Rejected : 실패함!
-
-```js
-// 서버에서 데이터 가져오기
-function getPosts() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 포트스들을 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getAlbums() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/albums");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 앨범데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getTodos() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/todos");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 할일데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-// 위의 코드는 상당히 코드량이 많다.
-// 언제가 오타가 발생할 것이다.
-// 예를 들어 http 주소가 바뀌었다.
-// 그래서 팀장님이 콜백함수로 하면 좋은데...
-function getData(apiString = "") {
-  // 약속의 결과를 돌려받는다.
-  // 왜 new Promise 라고 한 것은
-  // promise 로 만들어진 결과는 성공, 실패 에 대한 결과가 담겼다.
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://jsonplaceholder.typicode.com/" + apiString);
-    xhr.send();
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        //   callBack(xhr.responseText);
-        resolve(xhr.responseText);
-      } else {
-        // console.log(apiString + "에러에요", xhr.status);
-        reject(apiString + "에러에요", xhr.status);
-      }
-    };
-  });
-}
-
-function todosParse(data) {
-  console.log("할일 데이터 처리 했습니다.", data);
-}
-function albumsParse(data) {
-  console.log("앨범 데이터 처리 했습니다.", data);
-}
-function postsParse(data) {
-  console.log("포스트 데이터 처리 했습니다.", data);
-}
-function memberParse(data) {
-  console.log("멤버 데이터 처리 했습니다.", data);
-}
-
-getData("todos")
-  .then((data) => {
-    todosParse(data);
-    return getData("albums");
-  })
-  .then((data) => {
-    albumsParse(data);
-    return getData("posts");
-  })
-  .then((data) => {
-    postsParse(data);
-    return getData("users");
-  })
-  .then((data) => {
-    memberParse(data);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+```json
+// 웹소스에 포함되는 모듈 목록
+"dependencies": {}
 ```
 
-### 1.4. async/await
-
-- 적극 추천
-- 너무 좋아요.
-- function 앞에 반드시 `async` 키워드 작성
-- function 안쪽에 `try catch` 작성권장
-
-```js
-// 서버에서 데이터 가져오기
-function getPosts() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 포트스들을 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getAlbums() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/albums");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 앨범데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-
-function getTodos() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/todos");
-  xhr.send();
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      //할일 : 할일데이터를 html 태그로 만들고 화면에 배치
-    } else {
-      console.log("서버에러", xhr.status);
-    }
-  };
-}
-// 위의 코드는 상당히 코드량이 많다.
-// 언제가 오타가 발생할 것이다.
-// 예를 들어 http 주소가 바뀌었다.
-// 그래서 팀장님이 콜백함수로 하면 좋은데...
-function getData(apiString = "") {
-  // 약속의 결과를 돌려받는다.
-  // 왜 new Promise 라고 한 것은
-  // promise 로 만들어진 결과는 성공, 실패 에 대한 결과가 담겼다.
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://jsonplaceholder.typicode.com/" + apiString);
-    xhr.send();
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        //   callBack(xhr.responseText);
-        resolve(xhr.responseText);
-      } else {
-        // console.log(apiString + "에러에요", xhr.status);
-        reject(apiString + "에러에요", xhr.status);
-      }
-    };
-  });
-}
-
-function todosParse(data) {
-  console.log("할일 데이터 처리 했습니다.", data);
-}
-function albumsParse(data) {
-  console.log("앨범 데이터 처리 했습니다.", data);
-}
-function postsParse(data) {
-  console.log("포스트 데이터 처리 했습니다.", data);
-}
-function memberParse(data) {
-  console.log("멤버 데이터 처리 했습니다.", data);
-}
-
-// 순차적 Promise 실행하기
-async function getAllData() {
-  try {
-    const todosdata = await getData("todos");
-    todosParse(todosdata);
-
-    const albumsdata = await getData("albums");
-    albumsParse(albumsdata);
-
-    const postsdata = await getData("posts");
-    postsParse(postsdata);
-
-    const usersdata = await getData("users");
-    memberParse(usersdata);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-getAllData();
+```json
+// 개발에만 사용하는 모듈 목록
+// 서비스 소스에는 포함안됨
+"devDependencies": {}
 ```
 
-## 2. 활용 외부 API 연동 코드
+- scripts 항목(실행 명령어)
+
+```
+ npm run 명령어
+ npm run start : 미리보기 (미리보기 종료 Ctrl + C )
+ npm run build : 최종 전달할 소스 번들링(소스압축)
+ npm run test : 개발 중에 원하는 결과 나오는지 TEST 시 실행
+ npm run eject : 숨겨진 소스에서 추출하기
+```
+
+```json
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+```
+
+### 3.2. 불필요한 라이브러리 삭제
+
+- package.json 원본
+
+```json
+ "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+```
+
+- package.json 수정본
+
+```json
+ "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1"
+  },
+```
+
+- package-lock.json 삭제
+- node_modules 폴더 삭제
+- 재설치
+
+```
+npm i
+npm install
+```
+
+### 3.3. .gitignore 살펴보기
+
+- GitHub 에 업로드 되면 절대 안되는 파일과 폴더들목록
+- 실습 `/.env` 파일 만들기
+
+```
+JUMIN_NUM=0000
+```
+
+- .gitignore 내용 수정 및 추가
+
+```
+# env
+.env
+```
+
+### 3.4. public 폴더 살펴보기
+
+- favicon.ico : 즐겨찾기 및 주소 공유시 보일 이미지
+- logo192.png.. : 휴대폰 바로가기 등에 보여질 섬네일
+- manifest.json : react 는 웹 어플리케이션 입니다. 앱의 설명을 부여하고 싶다.
+- robots.txt : 검색엔진 노출 여부 작성, 크롤링 여부
+- sitemap.xml : 직접 추가(네이버, 구글 검색 등록시 요구 파일)
+- 웹페이지에 추가할 모든 리소스(이미지, 영상, 음악, 폰트 등) 배치
+  : images 폴더, assets 폴더 배치
+- index.html : 첫화면 정리
+
+```html
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>서비스 타이틀</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+### 3.5. src 폴더 살펴보기
+
+- 제거할 파일들
+  : App.test.js (파일명/폴더명에 `test`가 있으면 테스트 대상이므로 제거)
+  : logo.svg (우리가 사용하지 않으므로)
+  : reportWebVitalas.js (webVitalas 안사용하므로)
+  : setupTest.js (test 안함)
+
+- index.js
+  : 최초 실행되는 js 파일 (약속)
 
 ```js
-async function getAllData() {
-  try {
-    let res = await fetch("https://jsonplaceholder.typicode.com/posts");
-    let data = await res.json();
-    console.log("포스트 : ", data);
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
 
-    res = await fetch("https://jsonplaceholder.typicode.com/albums");
-    data = await res.json();
-    console.log("앨범 : ", data);
+// 아이디 root 에 js 내용을 js 실행 결과를 입력한다.
+// index.html 에 있는  <div id="root"></div> 변경금지
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-    res = await fetch("https://jsonplaceholder.typicode.com/users");
-    data = await res.json();
-    console.log("유저 : ", data);
-  } catch (error) {
-    console.log(error);
-  }
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
+```
+
+- App.js
+  : 화면에 html(jsx) 을 출력한다면 `반드시 대문자`로 파일명 작성
+
+```js
+import "./App.css";
+
+function App() {
+  return <div>안녕</div>;
 }
-getAllData();
+
+export default App;
+```
+
+- index.css : 수정
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+  color: #000000;
+}
+ul,
+li {
+  list-style: none;
+}
+html {
+  font-size: 16px;
+}
+body {
+  font-size: 16px;
+}
+```
+
+- App.css : 내용만 삭제
+
+## 4. 협업 프로젝트 개발 환경 설정
+
+### 4.1. ESLint
+
+- 전제 조건은 반드시 익스텐션 ESLint 설치하고 진행합니다.
+
+- 회사에 물어보고 ESLint 버전 얼마 사용하는지 파악
+  : `.eslintrc.js` 또는 `.eslintrc.json`
+  : 최신 즉 ESLint 8 버전부터는 `eslint.config.mjs`
+  : `.mjs` 확장자는 ESM을 나타냅니다.
+
+- ESLint 7 버전으로 셋팅을 시도함. `npm install eslint@7 -D`
+
+- 이후 설정
+
+```
+npx eslint --init
+```
+
+### 4.2. Prettier 설치
+
+- Prettier VSCode 익스텐션 반드시 설치 후 진행
+- `npm i prettier -D`
+- 파일로 문서포맷을 관리하도록 한다.
+- `.prettierrc.json` 파일생성
+
+```json
+{
+  "singleQuote": false,
+  "semi": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "printWidth": 80,
+  "arrowParens": "avoid",
+  "endOfLine": "auto"
+}
+```
+
+### 4.3. ESLint 와 Prettier 통합 관리
+
+- ESLint 에서 Prettier 에 관련된 규칙도 체크했으면 한다.
+- `npm i  eslint-config-prettier -D`
+- `npm i  eslint-plugin-prettier -D`
+- `npm i  eslint-plugin-prettier -D --force`
+
+- ESLint 에서 prettier 를 관리하는 내용을 추가한다.
+- .eslintrc.js 코드 추가
+
+```js
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+  ],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 12,
+    sourceType: "module",
+  },
+  plugins: ["react"],
+  rules: {},
+};
+```
+
+### 4.4. ESLint `rules` 설정
+
+- .eslintrc.js 를 관리하자.
+
+```js
+ rules: {
+    "no-unused-vars": "off",
+  },
 ```
