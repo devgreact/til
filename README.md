@@ -1,207 +1,119 @@
-# 리액트 CRA 프로젝트
+# Vite
 
-- 기존 리액트 프로젝트 생성의 기준
-- ESLint 설정과 Prettier 통합이 목표
+## 1. Vite 와 CRA 의 차이
 
-## 1. VSCode Extention 설치
+### 1.1. 프로젝트 생성법 차이
 
-- ESLint
-  : JavaScript 를 위해서 코드 오류 및 코드 가이드를 Help 도구
+```
+npx create-react-app@latest 소문자프로젝트명
+npm create vite@latest 소문자프로젝트명
+```
 
+### 1.2. 간략한 장단점.
+
+- Vite 는 차세대 프론트엔드 빌드 도구, 빠른 개발환경 제공
+- CRA 는 Webpack 을 활용하지만, Vite 는 Rollup, esbuild 을 사용합니다.
+- `HMR (Hot Module Replacement)` 를 Vite 에서는 신속히 제공한다.
+  : 즉, 모듈 교체 시 신속하게 업데이트를 한다.
+  : ES 모듈 교체를 이용해서 필요한 부분만 새로고치기 때문에 빠르다.
+  : CRA 는 Webpack 으로 번들링하는 시간 및 적용시간이 길어서 테스트시 시간 소비가 크다.
+- CRA 는 모든 환경을 제공하므로 초보자가 활용하기 좋음.
+- Vite 는 개발환경을 이해한 개발자가 활용하기 좋음.
+
+## 2. VSCode Extenstion 설치
+
+- ESLint 설치
 - ES7+ React/Redux/React-Native snippets
-  : React 템플릿 도구
-
+- Simple React Snippets
 - Error Lens
-  : JS 코드 에러 체크
-
+- React Hooks Snippets
 - Prettier - Code formatter
-  : 문서 포맷터
-
-## 2. 리액트 프로젝트 기본형 설치
-
-- 프로젝트 명은 반드시 `소문자`로 생성합니다.
-- 이름에 특수기호는 `-` 만 허용합니다.
-- 만약 현재 폴더에 프로젝트를 생성하려면 `.` 을 작성합니다.
-- 기본적으로 `git init` 이 자동 셋팅됩니다.
-
-```
-npx create-react-app@latest 프로젝트명
-```
-
-- 프로젝트 생성하기
-
-```
-npx create-react-app@latest .
-```
-
-## 3. 생성된 프로젝트 살펴보기
-
-- 회사에서 진행중인 프로젝트가 있다면 package.json 부터 파악
-
-### 3.1. package.json 살펴보기
-
-- 개발자가 `npm install 모듈명`
-- 개발시에 활용한 기술 파악
+- setting.json 코드 추가
 
 ```json
-// 웹소스에 포함되는 모듈 목록
-"dependencies": {}
+"editor.formatOnSave": true,
+
+"editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+},
 ```
 
-```json
-// 개발에만 사용하는 모듈 목록
-// 서비스 소스에는 포함안됨
-"devDependencies": {}
-```
+## 3. 프로젝트 구성
 
-- scripts 항목(실행 명령어)
+- 반드시 소문자(단어-단어) 처럼 특수기호 `-` 허용
+- 자동으로 `git init` 됨
+- `git remote add orgin 깃허브주소` 는 직접 셋팅
 
-```
- npm run 명령어
- npm run start : 미리보기 (미리보기 종료 Ctrl + C )
- npm run build : 최종 전달할 소스 번들링(소스압축)
- npm run test : 개발 중에 원하는 결과 나오는지 TEST 시 실행
- npm run eject : 숨겨진 소스에서 추출하기
-```
-
-```json
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-```
-
-### 3.2. 불필요한 라이브러리 삭제
-
-- package.json 원본
-
-```json
- "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
-```
-
-- package.json 수정본
-
-```json
- "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1"
-  },
-```
-
-- package-lock.json 삭제
-- node_modules 폴더 삭제
-- 재설치
+## 4. Vite 프로젝트 생성 후 과정
 
 ```
-npm i
 npm install
 ```
 
-### 3.3. .gitignore 살펴보기
+- 만약 yarn 으로 관리하실 분들은 주의 하셔야 합니다.
 
-- GitHub 에 업로드 되면 절대 안되는 파일과 폴더들목록
-- 실습 `/.env` 파일 만들기
+## 5. 프로젝트 살펴보기
+
+- 자동으로 기본 eslint 셋팅됨. (버전 고민)
+- package.json 파악
 
 ```
-JUMIN_NUM=0000
+dependency {}
+devDependency {}
 ```
 
-- .gitignore 내용 수정 및 추가
+### 5.1. .gitignore 수정
 
 ```
 # env
 .env
 ```
 
-### 3.4. public 폴더 살펴보기
+### 5.2. index.html 수정
 
-- favicon.ico : 즐겨찾기 및 주소 공유시 보일 이미지
-- logo192.png.. : 휴대폰 바로가기 등에 보여질 섬네일
-- manifest.json : react 는 웹 어플리케이션 입니다. 앱의 설명을 부여하고 싶다.
-- robots.txt : 검색엔진 노출 여부 작성, 크롤링 여부
-- sitemap.xml : 직접 추가(네이버, 구글 검색 등록시 요구 파일)
-- 웹페이지에 추가할 모든 리소스(이미지, 영상, 음악, 폰트 등) 배치
-  : images 폴더, assets 폴더 배치
-- index.html : 첫화면 정리
+- lang 과 title 만 수정
+- main.jsx 로 시작
 
 ```html
 <!doctype html>
 <html lang="ko">
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>서비스 타이틀</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>프로젝트</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
 ```
 
-### 3.5. src 폴더 살펴보기
+### 5.3. public 폴더
 
-- 제거할 파일들
-  : App.test.js (파일명/폴더명에 `test`가 있으면 테스트 대상이므로 제거)
-  : logo.svg (우리가 사용하지 않으므로)
-  : reportWebVitalas.js (webVitalas 안사용하므로)
-  : setupTest.js (test 안함)
+- 리소스 배치장소(images, mp4, font...)
 
-- index.js
-  : 최초 실행되는 js 파일 (약속)
+### 5.4. src 폴더
 
-```js
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
+- assets 폴더는 src 에 있는 js 들이 사용하는 리소스
 
-// 아이디 root 에 js 내용을 js 실행 결과를 입력한다.
-// index.html 에 있는  <div id="root"></div> 변경금지
-const root = ReactDOM.createRoot(document.getElementById("root"));
+### 5.5. index.css
 
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
-```
-
-- App.js
-  : 화면에 html(jsx) 을 출력한다면 `반드시 대문자`로 파일명 작성
-
-```js
-import "./App.css";
-
-function App() {
-  return <div>안녕</div>;
-}
-
-export default App;
-```
-
-- index.css : 수정
+- 참고 사항 ( :root 사용의 예 )
+- :root 는 html 보다 힘이 셉니다.
+- html {} 과 :root {} 적용시 :root 우선권을 가짐.
+- :root css는 html 에 css를 적용한 것과 같습니다.
+- html 을 커스터 마이징하고 싶을 때 :root 를 씁니다.
+- 전역으로 사용하고 싶은 경우에 활용.
 
 ```css
+:root {
+  --primary-color: #000000;
+  --secondary-color: #0000ff;
+  --font-size-base: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -219,37 +131,102 @@ html {
   font-size: 16px;
 }
 body {
-  font-size: 16px;
+  font-size: var(--font-size-base);
+  color: var(--primary-color);
+}
+/* 웹서비스 개발시 권장함.(개인적으로) */
+html,
+body,
+:root {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 ```
 
-- App.css : 내용만 삭제
+### 5.6. eslint.config.js
 
-## 4. 협업 프로젝트 개발 환경 설정
+- 기본셋팅
 
-### 4.1. ESLint
+```js
+import js from "@eslint/js";
+import globals from "globals";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 
-- 전제 조건은 반드시 익스텐션 ESLint 설치하고 진행합니다.
+export default [
+  // dist 폴더는 eslint 검사 제외
+  { ignores: ["dist"] },
+  {
+    // eslint 검사 대상, 파일명의 확장자
+    files: ["**/*.{js,jsx}"],
+    // js 및 jsx 프로그래밍 언어옵션
+    languageOptions: {
+      // js 검사 기준버전
+      ecmaVersion: 2020,
+      // globaks 는 웹브라우저 : windows, Node.js : local
+      // 웹브라우저를 사용할 건데 window, document ....
+      globals: globals.browser,
+      // parser (파서) : 해석, 풀어놓는다.
+      parserOptions: {
+        // lastes (최신버전) : ECMA 중에 최근 버전을 활용하겠다.
+        ecmaVersion: "latest",
+        // jsx 를 사용하겠다.
+        ecmaFeatures: { jsx: true },
+        // 모듈 방식중에 ESModule 을 쓰겠다.
+        // import 와 export 사용함을 선언함.
+        sourceType: "module",
+      },
+    },
+    // React 버전
+    settings: { react: { version: "18.3" } },
+    // ESLint 플러그인
+    plugins: {
+      // 리액트 문법 규칙 맞는지 검사용도 도구
+      react,
+      // 리액트 hooks 의 규칙이 맞는지 검사용도 도구
+      "react-hooks": reactHooks,
+      // 리액트 refresh
+      "react-refresh": reactRefresh,
+    },
+    // 검사 규칙을 정한다.
+    rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs["jsx-runtime"].rules,
+      ...reactHooks.configs.recommended.rules,
+      "react/jsx-no-target-blank": "off",
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
+    },
+  },
+];
+```
 
-- 회사에 물어보고 ESLint 버전 얼마 사용하는지 파악
-  : `.eslintrc.js` 또는 `.eslintrc.json`
-  : 최신 즉 ESLint 8 버전부터는 `eslint.config.mjs`
-  : `.mjs` 확장자는 ESM을 나타냅니다.
+## 6. Prettier 셋팅
 
-- ESLint 7 버전으로 셋팅을 시도함. `npm install eslint@7 -D`
+- 코드 포맷터
+- setting.json 추가 확인
 
-- 이후 설정
+```json
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+```
+
+### 6.1. 설치
 
 ```
-npx eslint --init
+npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
+
 ```
 
-### 4.2. Prettier 설치
-
-- Prettier VSCode 익스텐션 반드시 설치 후 진행
-- `npm i prettier -D`
-- 파일로 문서포맷을 관리하도록 한다.
-- `.prettierrc.json` 파일생성
+### 6.2. `.prettierrc` 파일 생성
 
 ```json
 {
@@ -264,45 +241,55 @@ npx eslint --init
 }
 ```
 
-### 4.3. ESLint 와 Prettier 통합 관리
+## 7. ESLint 와 Prettier 통합 설정
 
-- ESLint 에서 Prettier 에 관련된 규칙도 체크했으면 한다.
-- `npm i  eslint-config-prettier -D`
-- `npm i  eslint-plugin-prettier -D`
-- `npm i  eslint-plugin-prettier -D --force`
-
-- ESLint 에서 prettier 를 관리하는 내용을 추가한다.
-- .eslintrc.js 코드 추가
+- ESLint 에서 Prettier 도 처리필요
 
 ```js
-module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-  ],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
+import js from "@eslint/js";
+import globals from "globals";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import prettier from "eslint-plugin-prettier";
+
+export default [
+  // dist 폴더는 검사 제외
+  { ignores: ["dist"] },
+  {
+    // 검사할 파일 확장자
+    files: ["**/*.{js,jsx}"],
+    // 언어 옵션
+    languageOptions: {
+      ecmaVersion: "latest", // 최신 ECMAScript 문법 사용
+      globals: globals.browser, // 브라우저 환경 글로벌 변수 사용
+      parserOptions: {
+        ecmaFeatures: { jsx: true }, // JSX 문법 활성화
+        sourceType: "module", // ES 모듈 사용
+      },
     },
-    ecmaVersion: 12,
-    sourceType: "module",
+    // React 버전 설정
+    settings: { react: { version: "18.3" } },
+    // 플러그인 설정
+    plugins: {
+      react, // React 관련 규칙 플러그인
+      "react-hooks": reactHooks, // React Hooks 규칙 플러그인
+      "react-refresh": reactRefresh, // React Refresh 규칙 플러그인
+      prettier, // Prettier 플러그인
+    },
+    // 규칙 정의
+    rules: {
+      ...js.configs.recommended.rules, // 기본 JavaScript 권장 규칙
+      ...react.configs.recommended.rules, // React 권장 규칙
+      ...react.configs["jsx-runtime"].rules, // JSX Runtime 규칙
+      ...reactHooks.configs.recommended.rules, // React Hooks 권장 규칙
+      "react/jsx-no-target-blank": "off", // target="_blank" 관련 규칙 비활성화
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ], // React Fast Refresh 규칙
+      "prettier/prettier": "warn", // Prettier 규칙 (포매팅 오류를 에러로 표시)
+    },
   },
-  plugins: ["react"],
-  rules: {},
-};
-```
-
-### 4.4. ESLint `rules` 설정
-
-- .eslintrc.js 를 관리하자.
-
-```js
- rules: {
-    "no-unused-vars": "off",
-  },
+];
 ```
