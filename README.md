@@ -137,37 +137,71 @@ git push origin main
 만약 자격 증명 관리에 없으면 자동으로 인증 되는 안내창 출력
 ```
 
-#### 3.4. Clone
+## 4. clone 하기
 
-1.  본인 , 타인의 github repository 복제 (clone) 하기
+### 4.1. https 로 클론하기
 
-  git clone https://github.com/devgreact/clone_kko.git   .
+```
+ git clone 깃허브주소 .   엔터
+```
 
-  git branch  엔터
+### 4.2. 전체 branch 클론하기
 
-2. 모든 브랜치 목록 확인하기 
+```
+for branch in $(git branch -r | grep -v '\->'); do
+  git branch --track "${branch#origin/}" "$branch"
+done
+git fetch --all
+git pull --all
+```
 
-    git branch -a
+### 4.3. branch 확인하기
 
-3. 특정 브랜치 클론하기
+```
+ git branch 엔터
+ git status 엔터
+```
 
-  git checkout 브랜치명
-  git checkout 04-js
+### 4.4. 특정 branch 작성하기
 
-  git branch  엔터
+```
+ git switch 브랜치명
+```
 
+## 5. 깃허브 협업하기
 
-4. 모든 브랜치 pull 하기 
+### 5.1. 과정
 
-    for branch in $(git branch -r | grep -v '\->'); do
-        git branch --track "${branch#origin/}" "$branch"
-    done
-    git fetch --all
-    git pull --all  
+- 리액트 vite 프로젝트 생성 후 주소 공유
 
-5. 최종 목록 확인하기
+- 각 팀원은 `fork` 실행
 
-    git branch
+- fork 된 명단 확인
 
-현재 git 상태보기
-git status 엔터
+- 프로젝트 `각자 본인 주소에서 clone `
+
+- 각자 `git clone 주소 .`
+
+- 각자 브랜치 생성 `git branch 브랜치명`
+
+- 각자 작업
+
+- 각자 `git add .`
+
+- 각자 `git commit`
+
+- 각자 `git push origin 브랜치명`
+
+- 각자 본인의 `깃허브` 에서 `PR` 작성 및 요청
+
+- `PR` 후 팀장님께 메세지 보내기
+
+- 팀장은 검토 후 `merge` 또는 `close` 후 결과 회신
+
+- 각자 `회신` 받은 후 본인 `브랜치 제거`
+
+- 팀장님 `sync` 받고 `pull` 받으세요. 메시지 전달
+
+- 각 팀장은 `git fetch` 후 `git pull` 진행
+
+- 각자 `git branch 브랜치명`, `git switch 브랜치명` 후 작업
