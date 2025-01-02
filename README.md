@@ -205,3 +205,23 @@ git pull --all
 - 각 팀장은 `git fetch` 후 `git pull` 진행
 
 - 각자 `git branch 브랜치명`, `git switch 브랜치명` 후 작업
+
+## 6. 깃허브 특정 브랜치 클론하기
+
+- 특정 브랜치만 클론하는 방법은 다음과 같습니다
+
+```bash
+git clone -b <브랜치명> --single-branch <저장소 URL>
+
+# 예시
+git clone -b develop --single-branch https://github.com/username/repository.git
+```
+
+- 이미 저장소를 클론한 상태에서 특정 브랜치만 가져오고 싶다면
+
+```bash
+git fetch origin <브랜치명>:<브랜치명>
+
+# 해당 브랜치로 체크아웃
+git checkout <브랜치명>
+```
